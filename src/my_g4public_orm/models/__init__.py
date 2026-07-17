@@ -1,5 +1,10 @@
 """ORM models for the g4public database."""
 
+from .association import (
+    FamilyHasExternalResource,
+    FamilyHasSpecialist,
+    GeneHasFamily,
+)
 from .core import (
     Cell,
     FamilyAlias,
@@ -15,7 +20,10 @@ __all__ = [
     "Cell",
     "ExternalResource",
     "FamilyAlias",
+    "FamilyHasExternalResource",
+    "FamilyHasSpecialist",
     "FamilyNew",
+    "GeneHasFamily",
     "Hierarchy",
     "HierarchyClosure",
     "LocusStatsChr",
