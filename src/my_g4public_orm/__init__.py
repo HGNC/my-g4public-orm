@@ -56,7 +56,7 @@ from db_common import (  # noqa: E402
     health_check,
 )
 
-# Core exports (settings + declarative base + session surface).
+# Core exports (settings + declarative base + session + repositories).
 from my_g4public_orm.core import (  # noqa: E402
     DatabaseSettings,
     DeclarativeBase,
@@ -70,6 +70,7 @@ from my_g4public_orm.core.session import (  # noqa: E402
     initialize_engine,
     refresh_engine,
 )
+from my_g4public_orm.repositories.base import Repository  # noqa: E402
 
 __all__ = [
     "__version__",
@@ -93,4 +94,6 @@ __all__ = [
     # Capability re-exports (db-common alignment)
     "health_check",
     "DatabaseDriver",
+    # Repository
+    "Repository",
 ]
