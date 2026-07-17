@@ -39,6 +39,14 @@ _engine_factory: db_common.EngineFactory | None = None
 _session_factory: db_common.SessionFactory | None = None
 _global_settings: DatabaseSettings | None = None
 
+# -- Shared error messages ---------------------------------------------------
+_ENGINE_NOT_INITIALIZED = (
+    "Database engine not initialized. Call initialize_engine() first."
+)
+_SETTINGS_NOT_INITIALIZED = (
+    "Database settings not initialized. Call initialize_engine() first."
+)
+
 
 def initialize_engine(settings: DatabaseSettings | None = None) -> Engine:
     """Initialize the global database engine.
@@ -78,9 +86,7 @@ def get_engine() -> Engine:
         SessionError: If the engine has not been initialized.
     """
     if _engine_factory is None:
-        raise SessionError(
-            "Database engine not initialized. Call initialize_engine() first."
-        )
+        raise SessionError(_ENGINE_NOT_INITIALIZED)
     return _engine_factory.get_engine()
 
 
@@ -94,9 +100,7 @@ def get_settings() -> DatabaseSettings:
         SessionError: If settings have not been initialized.
     """
     if _global_settings is None:
-        raise SessionError(
-            "Database settings not initialized. Call initialize_engine() first."
-        )
+        raise SessionError(_SETTINGS_NOT_INITIALIZED)
     return _global_settings
 
 
@@ -108,9 +112,7 @@ def _require_session_factory() -> db_common.SessionFactory:
     initialized" error when it is absent).
     """
     if _session_factory is None:
-        raise SessionError(
-            "Database engine not initialized. Call initialize_engine() first."
-        )
+        raise SessionError(_ENGINE_NOT_INITIALIZED)
     return _session_factory
 
 

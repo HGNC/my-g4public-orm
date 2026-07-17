@@ -4,7 +4,7 @@ This mirrors ``pg_g4public_orm/core/settings.py`` but carries **MySQL** defaults
 (``mysql+mysqldb`` / port ``3306`` / database ``g4public`` / charset
 ``utf8mb4``). The ``charset``/``collation`` fields are inherited from db-common
 and are **active** for MySQL drivers (db-common's ``EngineFactory`` applies them
-to the connection URL).
+on connect).
 """
 
 from typing import Any
