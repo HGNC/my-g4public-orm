@@ -5,6 +5,7 @@ from my_g4public_orm.models.core.comment import Comment
 from my_g4public_orm.models.core.family_alias import FamilyAlias
 from my_g4public_orm.models.core.family_new import FamilyNew
 from my_g4public_orm.models.core.gencc import Gencc
+from my_g4public_orm.models.core.hcop_orthologs import HcopOrthologs
 from my_g4public_orm.models.core.hierarchy import Hierarchy
 from my_g4public_orm.models.core.hierarchy_closure import HierarchyClosure
 from my_g4public_orm.models.core.locus_stats_chr import LocusStatsChr
@@ -18,6 +19,7 @@ __all__ = [
     "FamilyAlias",
     "FamilyNew",
     "Gencc",
+    "HcopOrthologs",
     "Hierarchy",
     "HierarchyClosure",
     "LocusStatsChr",
