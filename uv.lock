@@ -534,11 +534,9 @@ version = "0.0.1"
 source = { editable = "." }
 dependencies = [
     { name = "db-common" },
-    { name = "docker" },
     { name = "mysqlclient" },
     { name = "pydantic" },
     { name = "pydantic-settings" },
-    { name = "pymysql" },
     { name = "sqlalchemy" },
 ]
 
@@ -547,9 +545,11 @@ dev = [
     { name = "actionlint-py" },
     { name = "bandit" },
     { name = "black" },
+    { name = "docker" },
     { name = "isort" },
     { name = "mypy" },
     { name = "mysqlclient" },
+    { name = "pymysql" },
     { name = "pytest" },
     { name = "pytest-cov" },
     { name = "pyyaml" },
@@ -561,6 +561,8 @@ mysql = [
 ]
 test = [
     { name = "actionlint-py" },
+    { name = "docker" },
+    { name = "pymysql" },
     { name = "pytest" },
     { name = "pytest-cov" },
     { name = "pyyaml" },
@@ -581,7 +583,7 @@ requires-dist = [
     { name = "bandit", marker = "extra == 'dev'", specifier = ">=1.7" },
     { name = "black", marker = "extra == 'dev'", specifier = ">=24.0" },
     { name = "db-common", git = "https://github.com/HGNC/db-common.git?tag=v0.2.0" },
-    { name = "docker", specifier = ">=7.2.0" },
+    { name = "docker", marker = "extra == 'test'", specifier = ">=7.2.0" },
     { name = "isort", marker = "extra == 'dev'", specifier = ">=5.0" },
     { name = "my-g4public-orm", extras = ["mysql"], marker = "extra == 'dev'" },
     { name = "my-g4public-orm", extras = ["test"], marker = "extra == 'dev'" },
@@ -590,7 +592,7 @@ requires-dist = [
     { name = "mysqlclient", marker = "extra == 'mysql'", specifier = ">=1.4" },
     { name = "pydantic", specifier = ">=2.0" },
     { name = "pydantic-settings", specifier = ">=2.0" },
-    { name = "pymysql", specifier = ">=1.2.0" },
+    { name = "pymysql", marker = "extra == 'test'", specifier = ">=1.2.0" },
     { name = "pytest", marker = "extra == 'test'", specifier = ">=8.0" },
     { name = "pytest-cov", marker = "extra == 'test'", specifier = ">=5.0" },
     { name = "pyyaml", marker = "extra == 'test'", specifier = ">=6.0" },

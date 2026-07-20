@@ -19,8 +19,12 @@ def _assert_column_types(table, expected_column_types: dict[str, str]) -> None:
         assert table.c[column_name].type.__class__.__name__ == type_name
 
 
+def _assert_index_names(table, expected_indexes: set[str]) -> None:
+    assert {index.name for index in table.indexes} == expected_indexes
+
+
 def test_gene_has_family_model_structure():
-    """gene_has_family has a composite PK and expected columns."""
+    """gene_has_family has a composite PK and expected columns/indexes."""
     assert GeneHasFamily.__tablename__ == "gene_has_family"
 
     table = GeneHasFamily.__table__
@@ -39,6 +43,10 @@ def test_gene_has_family_model_structure():
     )
     assert table.c.url.type.length == 255
     assert table.c.custom_sort.type.length == 255
+    _assert_index_names(
+        table,
+        {"gene_has_family_family_id_index", "gene_has_family_hgnc_id_index"},
+    )
 
 
 def test_family_has_external_resource_model_structure():
@@ -53,7 +61,7 @@ def test_family_has_external_resource_model_structure():
 
 
 def test_family_has_specialist_model_structure():
-    """family_has_specialist has a composite PK and expected columns."""
+    """family_has_specialist has a composite PK and expected columns/indexes."""
     assert FamilyHasSpecialist.__tablename__ == "family_has_specialist"
 
     table = FamilyHasSpecialist.__table__
@@ -61,3 +69,10 @@ def test_family_has_specialist_model_structure():
 
     _assert_primary_key_columns(table, ["fam_id", "specialist_id"])
     _assert_column_types(table, {"fam_id": "Integer", "specialist_id": "Integer"})
+    _assert_index_names(
+        table,
+        {
+            "family_has_specialist_fam_id_index",
+            "family_has_specialist_specialist_id_index",
+        },
+    )
