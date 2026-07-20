@@ -26,6 +26,8 @@ dependencies = [
     "pydantic>=2.0",
     "pydantic-settings>=2.0",
     "db-common>=0.2.0",
+    "docker>=7.2.0",
+    "pymysql>=1.2.0",
 ]
 
 [project.optional-dependencies]
