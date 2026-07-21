@@ -389,6 +389,20 @@ def test_security_workflow_scans_dependencies_and_secrets():
         for step in secret_steps
     ), "secret_scan job must run gitleaks action"
 
+    gitleaks_step = next(
+        (
+            step
+            for step in secret_steps
+            if step.get("uses", "").startswith("gitleaks/gitleaks-action@")
+        ),
+        None,
+    )
+    assert gitleaks_step is not None
+    env = gitleaks_step.get("env", {})
+    assert (
+        env.get("GITLEAKS_LICENSE") == "${{ secrets.GITLEAKS_LICENSE }}"
+    ), "secret_scan must pass GITLEAKS_LICENSE to gitleaks action"
+
 
 def test_pages_workflow_deploys_docs():
     workflow_path = ".github/workflows/pages.yml"
