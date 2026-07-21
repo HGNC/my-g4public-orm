@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+# Release v0.1.1
+
+**Released:** 2026-07-21
+**From:** v0.1.0
+
+---
+
+## Bug Fixes
+
+### ci
+
+- pass gitleaks license secret in security workflow (fdada30c)
+
+---
+
+## 📊 Release Statistics
+
+- **Total commits:** 2
+- **Conventional commits:** 1
+- **Bug fixes:** 1
+
+**Version change:** v0.1.0 → v0.1.1
 ## [Unreleased]
 
 ### Added
