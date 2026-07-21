@@ -1,0 +1,35 @@
+name: coverage
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Install dependencies
+        run: |
+          uv venv
+          uv pip install -e '.[test,mysql]'
+
+      - name: Run coverage tests
+        run: |
+          uv run pytest --cov=src/my_g4public_orm tests/
+
+      - name: Check coverage threshold
+        run: |
+          uv run coverage report --fail-under=70

@@ -169,6 +169,7 @@ dev = [
     "anybadge>=1.1",
     "myst-parser>=4.0",
     "sphinx>=8.0",
+    "furo>=2024.8.6",
     "testcontainers>=4.0",
 ]
 
