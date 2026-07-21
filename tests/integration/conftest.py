@@ -115,7 +115,9 @@ def _load_schema(engine: Engine, sql: str) -> None:
                 connection.exec_driver_sql(statement)
             except Exception as exc:  # pragma: no cover - exercised in failures
                 head = statement.splitlines()[0][:140]
-                raise RuntimeError(f"Failed executing schema statement: {head}") from exc
+                raise RuntimeError(
+                    f"Failed executing schema statement: {head}"
+                ) from exc
 
 
 @pytest.fixture(scope="function")

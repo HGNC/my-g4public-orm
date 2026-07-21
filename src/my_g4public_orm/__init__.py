@@ -70,6 +70,27 @@ from my_g4public_orm.core.session import (  # noqa: E402
     initialize_engine,
     refresh_engine,
 )
+
+# Models (all 17)
+from my_g4public_orm.models import (  # noqa: E402
+    Cell,
+    Comment,
+    ExternalResource,
+    FamilyAlias,
+    FamilyHasExternalResource,
+    FamilyHasSpecialist,
+    FamilyNew,
+    Gencc,
+    GeneHasFamily,
+    HcopOrthologs,
+    Hierarchy,
+    HierarchyClosure,
+    LocusStatsChr,
+    Mane,
+    PubHgnc,
+    RatMusSymbol,
+    Specialist,
+)
 from my_g4public_orm.repositories.base import Repository  # noqa: E402
 
 __all__ = [
@@ -96,4 +117,22 @@ __all__ = [
     "DatabaseDriver",
     # Repository
     "Repository",
+    # Models (all 17)
+    "Cell",
+    "Comment",
+    "ExternalResource",
+    "FamilyAlias",
+    "FamilyHasExternalResource",
+    "FamilyHasSpecialist",
+    "FamilyNew",
+    "Gencc",
+    "HcopOrthologs",
+    "GeneHasFamily",
+    "Hierarchy",
+    "HierarchyClosure",
+    "LocusStatsChr",
+    "Mane",
+    "PubHgnc",
+    "RatMusSymbol",
+    "Specialist",
 ]

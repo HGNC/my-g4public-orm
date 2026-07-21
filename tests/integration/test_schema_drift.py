@@ -163,9 +163,9 @@ def test_schema_drift_against_reflected_mysql_schema(loaded_schema_engine) -> No
             inspector.get_pk_constraint(table_name).get("constrained_columns") or ()
         )
         expected_db_pk = EXPECTED_DB_PRIMARY_KEYS.get(table_name, ())
-        assert reflected_pk == expected_db_pk, (
-            f"DB PK drift in {table_name}: db={reflected_pk} expected={expected_db_pk}"
-        )
+        assert (
+            reflected_pk == expected_db_pk
+        ), f"DB PK drift in {table_name}: db={reflected_pk} expected={expected_db_pk}"
 
         expected_model_pk = EXPECTED_MODEL_PRIMARY_KEYS[table_name]
         assert _pk_cols(model) == expected_model_pk, (
@@ -174,7 +174,9 @@ def test_schema_drift_against_reflected_mysql_schema(loaded_schema_engine) -> No
         )
 
         reflected_indexes = {
-            index["name"] for index in inspector.get_indexes(table_name) if index.get("name")
+            index["name"]
+            for index in inspector.get_indexes(table_name)
+            if index.get("name")
         }
         assert reflected_indexes == _index_names(model), (
             f"index-name drift in {table_name}: "
@@ -194,13 +196,11 @@ def test_hcop_orthologs_collation_and_indexes(loaded_schema_engine) -> None:
     assert reflected_indexes == EXPECTED_HCOP_INDEXES
 
     with loaded_schema_engine.connect() as connection:
-        reflected_collation = connection.exec_driver_sql(
-            """
+        reflected_collation = connection.exec_driver_sql("""
             SELECT TABLE_COLLATION
             FROM information_schema.TABLES
             WHERE TABLE_SCHEMA = DATABASE()
               AND TABLE_NAME = 'hcop_orthologs'
-            """
-        ).scalar_one()
+            """).scalar_one()
 
     assert reflected_collation == "utf8mb4_unicode_ci"
