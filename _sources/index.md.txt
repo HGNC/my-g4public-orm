@@ -24,6 +24,13 @@ quick-start
 api/index
 ```
 
+```{toctree}
+:maxdepth: 2
+:caption: Architecture Decisions:
+
+adr/index
+```
+
 ## Overview
 
 The `my-g4public-orm` package provides a typed, synchronous SQLAlchemy 2.0 ORM that maps to the existing MySQL schema of the HGNC public gene/family data (`pub_hgnc`, gene families, hierarchy, HCOP orthologs, GenCC, MANE, etc.).
