@@ -3,7 +3,9 @@
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
+import tomllib
 from datetime import datetime
+from pathlib import Path
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
@@ -11,7 +13,8 @@ from datetime import datetime
 project = "my-g4public-orm"
 copyright = f"{datetime.now().year}, HGNC"
 author = "HGNC"
-release = "0.0.1"
+_pyproject = Path(__file__).parent.parent / "pyproject.toml"
+release = tomllib.loads(_pyproject.read_text(encoding="utf-8"))["project"]["version"]
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
