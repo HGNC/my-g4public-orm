@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 - Documentation consistency regression tests to guard metadata drift.
+- `security.yml` GitHub Actions workflow with dependency (`pip-audit`) and secret (`gitleaks`) scanning on push/PR to `main`.
 
 ### Changed
 - Sphinx `docs/conf.py` now reads `release` from `pyproject.toml`.

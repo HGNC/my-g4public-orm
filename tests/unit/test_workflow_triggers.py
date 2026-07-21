@@ -80,6 +80,7 @@ WORKFLOWS = [
     "coverage.yml",
     "docs.yml",
     "development.yml",
+    "security.yml",
     "release.yml",
     "pages.yml",
 ]
@@ -156,6 +157,12 @@ def test_coverage_triggers_push_and_pull_request_on_main() -> None:
 
 def test_docs_triggers_push_and_pull_request_on_main() -> None:
     on = _on_section(load_workflow("docs.yml"))
+    assert _branches(on, "push") == ["main"]
+    assert _branches(on, "pull_request") == ["main"]
+
+
+def test_security_triggers_push_and_pull_request_on_main() -> None:
+    on = _on_section(load_workflow("security.yml"))
     assert _branches(on, "push") == ["main"]
     assert _branches(on, "pull_request") == ["main"]
 
@@ -266,7 +273,8 @@ def test_main_only_workflow(workflow_name, expected_jobs):
 
 
 @pytest.mark.parametrize(
-    "workflow_name", ["ci", "coverage", "development", "docs", "pages", "release"]
+    "workflow_name",
+    ["ci", "coverage", "development", "docs", "security", "pages", "release"],
 )
 def test_workflows_use_project_python_version(workflow_name):
     workflow = load_workflow(f".github/workflows/{workflow_name}.yml")
@@ -357,6 +365,29 @@ def test_release_builds_distribution_from_tagged_commit():
 
     steps = build_job.get("steps", [])
     assert any("uv build" in step.get("run", "") for step in steps)
+
+
+def test_security_workflow_scans_dependencies_and_secrets():
+    workflow = load_workflow(".github/workflows/security.yml")
+
+    assert workflow["name"] == "security"
+    on = workflow.get("on", {})
+    assert on.get("push", {}).get("branches") == ["main"]
+    assert on.get("pull_request", {}).get("branches") == ["main"]
+
+    jobs = workflow.get("jobs", {})
+    assert set(jobs) == {"dependency_audit", "secret_scan"}
+
+    dep_steps = jobs["dependency_audit"].get("steps", [])
+    assert any(
+        "pip-audit --local" in step.get("run", "") for step in dep_steps
+    ), "dependency_audit job must run pip-audit --local"
+
+    secret_steps = jobs["secret_scan"].get("steps", [])
+    assert any(
+        step.get("uses", "").startswith("gitleaks/gitleaks-action@")
+        for step in secret_steps
+    ), "secret_scan job must run gitleaks action"
 
 
 def test_pages_workflow_deploys_docs():

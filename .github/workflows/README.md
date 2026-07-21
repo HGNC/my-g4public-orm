@@ -9,12 +9,13 @@ All day-to-day development happens on a `dev` branch and lands via a pull
 request against `main`. No workflow triggers on `dev`, `develop`, or
 `feature/*` branches — they fire only on `main`:
 
-| Workflow        | `push: [main]` | `pull_request: [main]` |
-| --------------- | :------------: | :--------------------: |
-| `ci.yml`        |       ✓        |           ✓            |
-| `coverage.yml`  |       ✓        |           ✓            |
-| `docs.yml`      |       ✓        |           ✓            |
-| `development.yml` |      —       |           ✓            |
+| Workflow          | `push: [main]` | `pull_request: [main]` |
+| ----------------- | :------------: | :--------------------: |
+| `ci.yml`          |       ✓        |           ✓            |
+| `coverage.yml`    |       ✓        |           ✓            |
+| `docs.yml`        |       ✓        |           ✓            |
+| `security.yml`    |       ✓        |           ✓            |
+| `development.yml` |       —        |           ✓            |
 
 `release.yml` and `pages.yml` (added in a follow-up task) fire on
 `push: [main]` only.
@@ -30,6 +31,14 @@ A single matrixed job with two legs:
   `--character-set-server=utf8mb4 --collation-server=utf8mb4_bin`.
 
 There is **no** `performance` leg.
+
+## `security.yml`
+
+Two security-focused jobs run on push/PR to `main`:
+
+- **`dependency_audit`** — installs project dependencies and runs
+  `pip-audit --local`.
+- **`secret_scan`** — runs `gitleaks` against the repository history.
 
 ## MySQL substitutions vs the PostgreSQL sibling
 
