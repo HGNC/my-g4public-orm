@@ -88,16 +88,19 @@ WORKFLOWS = [
 FORBIDDEN_BRANCHES = {"dev", "develop"}
 
 
-def load_workflow(path):
-    """Load a workflow file and normalize the YAML 1.1 ``on:`` key.
-
-    Delegates to ``_load_workflow`` for file I/O and encoding.
-    """
+def load_workflow(path: str) -> dict:
+    """Load a workflow file and normalize the YAML 1.1 ``on:`` key."""
     name = Path(path).name
-    workflow = _load_workflow(name)
+    workflow_path = WORKFLOWS_DIR / name
+    assert workflow_path.is_file(), f"Missing workflow: .github/workflows/{name}"
+    with workflow_path.open(encoding="utf-8") as fh:
+        workflow = yaml.safe_load(fh)
+    assert isinstance(workflow, dict), f"{name} did not parse to a mapping"
+
     # yaml 1.1 parses the `on:` key as bool True; normalize it back
     if True in workflow:
         workflow["on"] = workflow.pop(True)
+
     return workflow
 
 
@@ -105,24 +108,9 @@ def get_run_commands(job):
     return [step.get("run", "") for step in job.get("steps", []) if "run" in step]
 
 
-def _load_workflow(name: str) -> dict:
-    path = WORKFLOWS_DIR / name
-    assert path.is_file(), f"Missing workflow: .github/workflows/{name}"
-    with path.open(encoding="utf-8") as fh:
-        data = yaml.safe_load(fh)
-    assert isinstance(data, dict), f"{name} did not parse to a mapping"
-    return data
-
-
 def _on_section(data: dict) -> dict:
-    """Return the ``on:`` trigger mapping.
-
-    PyYAML parses the YAML 1.1 truthy key ``on`` as the boolean ``True``, so try
-    both spellings.
-    """
+    """Return the ``on:`` trigger mapping."""
     on = data.get("on")
-    if on is None:
-        on = data.get(True)  # type: ignore[call-overload]
     assert isinstance(on, dict), "workflow has no `on:` trigger mapping"
     return on
 
@@ -155,32 +143,32 @@ def test_workflows_readme_exists() -> None:
 
 
 def test_ci_triggers_push_and_pull_request_on_main() -> None:
-    on = _on_section(_load_workflow("ci.yml"))
+    on = _on_section(load_workflow("ci.yml"))
     assert _branches(on, "push") == ["main"]
     assert _branches(on, "pull_request") == ["main"]
 
 
 def test_coverage_triggers_push_and_pull_request_on_main() -> None:
-    on = _on_section(_load_workflow("coverage.yml"))
+    on = _on_section(load_workflow("coverage.yml"))
     assert _branches(on, "push") == ["main"]
     assert _branches(on, "pull_request") == ["main"]
 
 
 def test_docs_triggers_push_and_pull_request_on_main() -> None:
-    on = _on_section(_load_workflow("docs.yml"))
+    on = _on_section(load_workflow("docs.yml"))
     assert _branches(on, "push") == ["main"]
     assert _branches(on, "pull_request") == ["main"]
 
 
 def test_development_triggers_pull_request_only() -> None:
-    on = _on_section(_load_workflow("development.yml"))
+    on = _on_section(load_workflow("development.yml"))
     assert _branches(on, "pull_request") == ["main"]
     assert "push" not in on, "development.yml must not fire on push"
 
 
 @pytest.mark.parametrize("name", WORKFLOWS)
 def test_no_workflow_references_forbidden_branches(name: str) -> None:
-    on = _on_section(_load_workflow(name))
+    on = _on_section(load_workflow(name))
     seen: list[str] = []
     for trigger in ("push", "pull_request"):
         seen.extend(_branches(on, trigger))
@@ -194,7 +182,7 @@ def test_no_workflow_references_forbidden_branches(name: str) -> None:
 
 
 def test_ci_matrix_is_unit_and_integration_only() -> None:
-    data = _load_workflow("ci.yml")
+    data = load_workflow("ci.yml")
     matrix_keys: list[str] = []
     for job in data.get("jobs", {}).values():
         include = (job.get("strategy", {}).get("matrix") or {}).get("include")
@@ -212,7 +200,7 @@ def test_ci_matrix_is_unit_and_integration_only() -> None:
 
 
 def test_ci_integration_leg_uses_mysql_service_and_extra() -> None:
-    data = _load_workflow("ci.yml")
+    data = load_workflow("ci.yml")
     jobs = data.get("jobs", {})
     assert jobs, "ci.yml declares no jobs"
 

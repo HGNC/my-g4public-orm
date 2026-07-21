@@ -71,9 +71,6 @@ class VersionReferenceUpdater:
 
     def update_file(self, file_path: Path, old_version: str, new_version: str):
         """Update version references in a single file."""
-        changes = 0
-        errors = []
-
         try:
             content = file_path.read_text(encoding="utf-8")
             original_content = content
@@ -116,23 +113,16 @@ class VersionReferenceUpdater:
             # Update version numbers in code blocks
             content = re.sub(r"`[0-9]+\.[0-9]+\.[0-9]+`", f"`{new_version}`", content)
 
-            # Check if content was actually changed
-            if content != original_content:
-                file_path.write_text(content, encoding="utf-8")
-                changes += 1
-                return changes
+            if content == original_content:
+                return 0
+
+            file_path.write_text(content, encoding="utf-8")
+            return 1
 
         except Exception as e:
-            errors.append(str(e))
             # Fail fast - don't silently swallow errors
             print(f"Error updating {file_path}: {e}", file=sys.stderr)
             sys.exit(1)
-
-        if errors:
-            print(f"Error updating {file_path}: {errors[0]}", file=sys.stderr)
-            sys.exit(1)
-
-        return changes
 
     def update_all_references(
         self, old_version: str, new_version: str, root_dir: str = "."
